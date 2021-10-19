@@ -1,0 +1,27 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: app-delivering-chart
+spec:
+  components:
+  - name: instrumented-app
+    type: webservice
+    properties:
+      image: jeswinkninan/distroless:v1
+      port: 9091
+    traits:
+    - type: scaler
+      properties:
+        replicas: 4
+    - type: ingress-1-20
+      properties:
+        domain: myapp.myservice.com
+        http:
+          "/": 8000
+   - name: redis-comp
+     type: helm
+     properties:
+      chart: redis-cluster
+      version: 6.2.7
+      url: https://charts.bitnami.com/bitnami
+      repoType: helm

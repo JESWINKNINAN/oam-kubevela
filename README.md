@@ -1,2 +1,3 @@
-# oam-kubevela-demo
-Sample Application which demonstrates the Open Application Model(OAM) with help of KubeVela. 
+# oam-kubevela
+
+This repository will shows the example KubeVela app definitions which will helps someone to get started with OAM.

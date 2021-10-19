@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: instrumented-app-go-oam-app
+spec:
+  components:
+    - name: instrumented-app
+      type: webservice
+      properties:
+        image: jeswinkninan/distroless:v1
+        port: 9091
+      traits:
+        - type: scaler
+          properties:
+            replicas: 4
+        - type: ingress-1-20
+          properties:
+            domain: myapp.myservice.com
+            http:
+              "/": 8000
+        

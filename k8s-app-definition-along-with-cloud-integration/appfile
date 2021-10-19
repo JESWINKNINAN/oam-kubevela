@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: wordpress-with-alibaba-rds
+spec:
+  components:
+  - name: wordpress
+    type: webservice
+    properties:
+      image: wordpress:4.8-apache
+      port: 9091
+    traits:
+    - type: scaler
+      properties:
+        replicas: 80
+    - type: ingress-1-20
+      properties:
+        domain: myapp.wordpress.com
+        http:
+          "/": 8000
+  - name: wordpress-db
+    type: alibaba-rds
+    properties:
+      instance_name: wordpress-db
+      account_name: oamtest
+      password: 
+      writeConnectionSecretToRef:
+        name: db-conn
