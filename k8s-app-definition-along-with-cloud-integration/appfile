@@ -4,25 +4,46 @@ metadata:
   name: wordpress-with-alibaba-rds
 spec:
   components:
-  - name: wordpress
-    type: webservice
-    properties:
-      image: wordpress:4.8-apache
-      port: 9091
-    traits:
-    - type: scaler
-      properties:
-        replicas: 80
-    - type: ingress-1-20
-      properties:
-        domain: myapp.wordpress.com
-        http:
-          "/": 8000
   - name: wordpress-db
     type: alibaba-rds
     properties:
       instance_name: wordpress-db
       account_name: oamtest
-      password: 
+      password: #Put your password
       writeConnectionSecretToRef:
         name: db-conn
+  - name: wordpress
+    type: webservice
+    properties:
+      image: wordpress:4.8-apache
+      port: 80
+      env: 
+      - name: WORDPRESS_DB_HOST
+        valueFrom: 
+          secretKeyRef: 
+            name: db-conn
+            key: DB_HOST
+      - name: WORDPRESS_DB_NAME
+        valueFrom: 
+          secretKeyRef: 
+            name: db-conn
+            key: DB_NAME
+      - name: WORDPRESS_DB_USER
+        valueFrom: 
+          secretKeyRef: 
+            name: db-conn
+            key: DB_USER    
+      - name: WORDPRESS_DB_PASSWORD
+        valueFrom: 
+          secretKeyRef: 
+            name: db-conn
+            key: DB_PASSWORD                  
+    traits:
+    - type: scaler
+      properties:
+        replicas: 3
+    - type: ingress-1-20
+      properties:
+        domain: myapp.wordpress.com
+        http:
+          "/": 80       
